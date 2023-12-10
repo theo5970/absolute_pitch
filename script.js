@@ -31,13 +31,13 @@ let answerKeys = new Int32Array(64);
 let userCorrectBits = new Array(64);
 let answerCount = 0;
 let answerStartedAt;
-let isInputBlocked = false;
 
 let correctClicks = 0;
 let totalClicks = 0;
 
 let timer = 0;
 let timerCallback;
+let isWaitingNewAnswer = false;
 
 window.addEventListener("load", () => {
     initNoteButtons();
@@ -58,7 +58,7 @@ window.addEventListener("load", () => {
     resultAccuracySpan = document.getElementById("span_result_accuracy");
     resultBackButton = document.getElementById("btn_result_back");
     resultBackButton.addEventListener("click", () => switchScene(0));
-    
+
     for (const sceneElement of document.querySelectorAll("#scenes>div")) {
         scenes.push(sceneElement);
     }
@@ -78,7 +78,7 @@ function initAudioContext() {
     audioContext = new AudioContext();
     gainNode = audioContext.createGain();
     gainNode.connect(audioContext.destination);
-    gainNode.gain.value = 0.1;
+    gainNode.gain.value = 0.2;
 }
 
 function initNoteButtons() {
@@ -94,17 +94,18 @@ function initNoteButtons() {
     }
 }
 function onNoteButtonClicked(userKey) {
-    if (!isGamePlaying || isInputBlocked) {
+    if (!isGamePlaying) {
         return;
     }
 
     let isAnyCorrect = false;
+    let isAlreadyCorrect = false;
     for (let i = 0; i < answerCount; i++) {
         let relativeAnswerKey = answerKeys[i] % 12;
-        if (userCorrectBits[i] == true) {
-            continue;
-        }
         if (userKey === relativeAnswerKey) {
+            if (userCorrectBits[i] === true) {
+                isAlreadyCorrect = true;
+            }
             userCorrectBits[i] = true;
             isAnyCorrect = true;
             break;
@@ -112,32 +113,36 @@ function onNoteButtonClicked(userKey) {
     }
 
     const relativeUserKey = userKey % 12;
-    if (isAnyCorrect) {
+    if (isAnyCorrect && !isAlreadyCorrect) {
         // 맞췄다!
         keyButtons[relativeUserKey].classList.add("correct");
         correctClicks++;
 
     } else {
         // 틀렸다!
-        isInputBlocked = true;
-
         keyButtons[relativeUserKey].classList.add("wrong");
         setTimeout(() => {
-            isInputBlocked = false;
             keyButtons[relativeUserKey].classList.remove("wrong");
         }, 300);
     }
-    totalClicks++;
+
+    if (!isAlreadyCorrect) {
+        totalClicks++;
+    }
 
     const isUserAllCorrect = userCorrectBits.filter(x => x, 0).length == answerCount;
     if (isUserAllCorrect) {
         const responseTime = Date.now() - answerStartedAt;
         responseTimeSpan.innerText = (responseTime * 0.001).toFixed(3);
 
-        setTimeout(() => {
-            newAnswer();
-            playAnswerNotes();
-        }, 150);
+        if (!isWaitingNewAnswer) {
+            isWaitingNewAnswer = true;
+            setTimeout(() => {
+                newAnswer();
+                playAnswerNotes();
+                isWaitingNewAnswer = false;
+            }, 150);
+        }
     }
     scoreSpan.innerText = correctClicks.toString();
     accuracySpan.innerText = ((correctClicks / totalClicks) * 100).toFixed(2);
@@ -160,7 +165,10 @@ function initGame() {
     switchScene(1);
     correctClicks = 0;
     totalClicks = 0;
+    scoreSpan.innerText = "0";
     accuracySpan.innerText = "0.00";
+    responseTimeSpan.innerText = "0.000";
+    isWaitingNewAnswer = false;
 
     timer = 60;
     updateTimerSpan();
@@ -172,7 +180,7 @@ function onGameEnd() {
     isGamePlaying = false;
     let accuracy = (correctClicks / totalClicks) * 100;
     let score = (correctClicks / 90) * 80 + (accuracy / 100.0) * 20;
-    
+
     if (totalClicks === 0) {
         accuracy = 0;
         score = 0;
@@ -218,7 +226,7 @@ function playAnswerNotes() {
 function playSound(note, timeOffset, duration) {
     let osc = audioContext.createOscillator();
     osc.connect(gainNode);
-    osc.type = 'square';
+    osc.type = 'sawtooth';
     osc.frequency.value = noteToFreq(note);
 
     osc.start(audioContext.currentTime + timeOffset);
