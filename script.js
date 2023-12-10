@@ -171,7 +171,7 @@ function onGameEnd() {
     switchScene(2);
     isGamePlaying = false;
     let accuracy = (correctClicks / totalClicks) * 100;
-    let score = (correctClicks / 80) * 80 + (accuracy / 100.0) * 20;
+    let score = (correctClicks / 90) * 80 + (accuracy / 100.0) * 20;
     
     if (totalClicks === 0) {
         accuracy = 0;
