@@ -1,0 +1,95 @@
+.container {
+    width: 98%;
+    max-width: 600px;
+    margin: 0 auto;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    padding: 40px 0;
+}
+
+.title {
+    margin:10px 0;
+    font-weight: bold;
+    font-size: 28px;
+}
+.small-title {
+    color: gray;
+    font-weight: normal;
+    font-size: 10px;
+}
+.text-center {
+    text-align: center;
+}
+
+.btn {
+    margin: 1px;
+    padding: 8px 12px;
+    outline: none;
+    cursor: pointer;
+    user-select: none;
+}
+
+.btn-white {
+    background-color: white;
+    border: 1px solid #ccc;
+}
+
+.btn-white:hover {
+    background-color: #eee;
+}
+
+.piano {
+    width: 20.6em;
+    height: 16em;
+    padding: 0;
+    margin: auto auto;
+}
+
+.white,
+.black {
+    list-style: none;
+    position: relative;
+    display: flex;
+    float: left;
+    justify-content: center;
+    align-items: flex-end;
+    cursor: pointer;
+    box-shadow:0 -2px 6px rgba(0,0,0,.4) inset;
+    user-select: none;
+}
+
+.white {
+    background-color: white;
+    height: 12.5rem;
+    width: 3.0rem;
+    z-index: 1;
+}
+
+.white:hover {
+    background-color: #eee;
+}
+
+.black {
+    height: 8rem;
+    width: 1.9rem;
+    margin: 0 0 0 -1rem;
+    background-color: black;
+    color: white;
+    z-index: 2;
+}
+
+.black:hover {
+    background-color: #333;
+}
+
+.offset {
+    margin: 0 0 0 -1rem;
+}
+
+.wrong, .wrong:hover {
+    background-color: #f73b3b;
+}
+
+.correct, .correct:hover {
+    background-color: #3ba9f7;
+}

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Absolute Pitch</title>
+    <script type="module" src="script.js"></script>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="container" id="scenes">
+        <div style="display: none;">
+            <div class="text-center">
+                <p class="title">절대음감 테스트 </p>
+                <p>3개의 음을 들은 다음 무슨 음인지 맞춰봐요~<br />(모든 옥타브, 모든 음)</p>
+                <button class="btn btn-white" id="btn_start">시작하기</button>
+            </div>
+        </div>
+        <div style="display: none;">
+            <h2 class="text-center">남은 시간: <span id="span_timer">01:00</span></h2>
+            <ul class="piano" id="piano">
+                <!-- 도 -->
+                <li note="0" class="white">도</li>
+                <!-- 도# -->
+                <li note="1" class="black">도#</li>
+                <!-- 레 -->
+                <li note="2" class="white offset">레</li>
+                <!-- 레# -->
+                <li note="3" class="black">레#</li>
+                <!-- 미 -->
+                <li note="4" class="white offset">미</li>
+                <!-- 파 -->
+                <li note="5" class="white">파</li>
+                <!-- 파# -->
+                <li note="6" class="black offset">파#</li>
+                <!-- 솔 -->
+                <li note="7" class="white offset">솔</li>
+                <!-- 솔# -->
+                <li note="8" class="black">솔#</li>
+                <!-- 라 -->
+                <li note="9" class="white offset">라</li>
+                <!-- 라# -->
+                <li note="10" class="black">라#</li>
+                <!-- 시 -->
+                <li note="11" class="white offset">시</li>
+            </ul>
+            <div class="text-center">
+                <p>맞춤: <span id="span_score">0</span>개</p>
+                <p>반응 시간: <span id="span_response_time">0</span>초</p>
+                <p>정확도: <span id="span_accuracy">0</span>%</p>
+                <button class="btn btn-white" id="btn_listen">다시 듣기</button>
+            </div>
+        </div>
+        <div style="display: none;" class="text-center">
+            <h1>당신의 점수는</h1>
+            <h2><span id="span_result_score"></span>점</h2>
+            
+            <p>맞춘 개수: <span id="span_result_correct"></span>개</p>
+            <p>정확도: <span id="span_result_accuracy"></span>%</p>
+            <button class="btn btn-white" id="btn_result_back">돌아가기</button>
+        </div>
+    </div>
+</body>
+
+</html>
