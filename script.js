@@ -39,6 +39,8 @@ let timer = 0;
 let timerCallback;
 let isWaitingNewAnswer = false;
 
+let customWave;
+
 window.addEventListener("load", () => {
     initNoteButtons();
     initAudioContext();
@@ -78,7 +80,17 @@ function initAudioContext() {
     audioContext = new AudioContext();
     gainNode = audioContext.createGain();
     gainNode.connect(audioContext.destination);
-    gainNode.gain.value = 0.2;
+    gainNode.gain.value = 0.23;
+    const real = new Float32Array(5);
+    const imag = new Float32Array(5);
+
+    real[0] = 1;
+    real[1] = 0.6;
+    real[2] = 0.9;
+    real[3] = 0.7;
+    real[4] = 0.3;
+    
+    customWave = audioContext.createPeriodicWave(real, imag);
 }
 
 function initNoteButtons() {
@@ -218,15 +230,16 @@ function newAnswer() {
     }
 }
 function playAnswerNotes() {
+    let tuning = 0.4 * (Math.random() - 0.5);
     for (let i = 0; i < answerCount; i++) {
-        playSound(answerKeys[i], 0, 0.3);
+        playSound(answerKeys[i] + tuning, 0, 0.3);
     }
 }
 
 function playSound(note, timeOffset, duration) {
     let osc = audioContext.createOscillator();
     osc.connect(gainNode);
-    osc.type = 'sawtooth';
+    osc.setPeriodicWave(customWave);
     osc.frequency.value = noteToFreq(note);
 
     osc.start(audioContext.currentTime + timeOffset);
