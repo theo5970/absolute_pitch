@@ -30,6 +30,7 @@ let isGamePlaying = false;
 let answerKeys = new Int32Array(64);
 let userCorrectBits = new Array(64);
 let answerCount = 0;
+let answerCountFlag = false;
 let answerStartedAt;
 
 let correctClicks = 0;
@@ -165,6 +166,7 @@ function initGame() {
     switchScene(1);
     correctClicks = 0;
     totalClicks = 0;
+    answerCountFlag = false;
     scoreSpan.innerText = "0";
     accuracySpan.innerText = "0.00";
     responseTimeSpan.innerText = "0.000";
@@ -179,15 +181,19 @@ function onGameEnd() {
     switchScene(2);
     isGamePlaying = false;
     let accuracy = (correctClicks / totalClicks) * 100;
-    let score = (correctClicks / 90) * 80 + (accuracy / 100.0) * 20;
+    let score = 1.22 * Math.max(correctClicks, 100) * Math.pow(accuracy / 100.0, 1.25);
 
     if (totalClicks === 0) {
         accuracy = 0;
         score = 0;
     }
 
-    resultScoreSpan.innerText = score.toFixed(1);
-    resultCorrectSpan.innerText = correctClicks.toString() + " / " + totalClicks.toString();
+    if (score <= 100) {
+        resultScoreSpan.innerText = score.toFixed(1);
+    } else {
+        resultScoreSpan.innerText = "100" + " + " + (score - 100).toFixed(1);
+    }
+    resultCorrectSpan.innerText = correctClicks.toString();
     resultAccuracySpan.innerText = accuracy.toFixed(2);
 }
 function randInt(min, max) {
@@ -201,7 +207,13 @@ function newAnswer() {
     answerKeys.fill(-1);
     userCorrectBits.fill(false);
     answerStartedAt = Date.now();
-    answerCount = 3;
+    answerCountFlag = !answerCountFlag;
+    if (answerCountFlag) {
+        answerCount = 3;
+    } else {
+        answerCount = 2;
+    }
+
     for (let i = 0; i < answerCount; i++) {
         let key = 0;
         do {
