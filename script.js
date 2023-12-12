@@ -181,7 +181,7 @@ function onGameEnd() {
     switchScene(2);
     isGamePlaying = false;
     let accuracy = (correctClicks / totalClicks) * 100;
-    let score = 1.22 * Math.max(correctClicks, 100) * Math.pow(accuracy / 100.0, 1.25);
+    let score = 1.22 * Math.min(correctClicks, 100) * Math.pow(accuracy / 100.0, 1.25);
 
     if (totalClicks === 0) {
         accuracy = 0;
